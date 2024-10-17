@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
+import style from "../styles/Productos.module.css";
 import "../styles/modal.css";
+import gridStyle from "../styles/Grid.module.css";
 
 function Productos() {
   const [products, setProducts] = useState([]);
@@ -20,7 +22,7 @@ function Productos() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8084/productos", {
+        const response = await axios.get("http://localhost:8090/productos", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -41,7 +43,7 @@ function Productos() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8084/productos/${id}`, {
+      await axios.delete(`http://localhost:8090/productos/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -83,7 +85,7 @@ function Productos() {
   const handleUpdate = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8084/productos/${productEdit.id}`,
+        `http://localhost:8090/productos/${productEdit.id}`,
         productEdit,
         {
           headers: {
@@ -105,7 +107,7 @@ function Productos() {
   const handleAddProduct = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8084/productos",
+        "http://localhost:8090/productos",
         newProduct,
         {
           headers: {
@@ -126,28 +128,29 @@ function Productos() {
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className={style["productos-container"]}>
         <input
           type="text"
           placeholder="Buscar"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="form-control"
-          style={{ width: "900px" }}
         />
-        <button className="btn btn-primary" onClick={openAddModal}>
+        <button className={style["add-product-button"]} onClick={openAddModal}>
           Agregar Producto
         </button>
       </div>
 
-      {filterProducts.map((product) => (
-        <ProductsCard
-          key={product.id}
-          product={product}
-          onEdit={() => handleEdit(product)}
-          onDelete={() => openModal(product)}
-        />
-      ))}
+      <div className={gridStyle["grid-container"]}>
+        {filterProducts.map((product) => (
+          <ProductsCard
+            key={product.id}
+            product={product}
+            onEdit={() => handleEdit(product)}
+            onDelete={() => openModal(product)}
+          />
+        ))}
+      </div>
 
       {showModal && (
         <Modal onClose={closeModal}>
@@ -243,26 +246,28 @@ function Productos() {
 function ProductsCard({ product, onEdit, onDelete }) {
   return (
     <>
-      <div className="card" style={{ width: "40rem", margin: "10px" }}>
-        <h5 className="card-header">{product.name}</h5>
-        <div className="card-body">
+      <div className={gridStyle["product-card"]}>
+        <h5 className={gridStyle["product-card-header"]}>{product.name}</h5>
+        <div className={gridStyle["product-card-body"]}>
           <h5 className="card-title">{product.descripcion}</h5>
-          <p className="card-text">${product.price}</p>
-          <a
-            href="#"
-            className="btn btn-secondary"
-            onClick={() => onEdit(product)}
-          >
-            Editar
-          </a>
-          <a
-            href="#"
-            className="btn btn-danger"
-            style={{ marginLeft: "10px" }}
-            onClick={() => onDelete()}
-          >
-            Eliminar
-          </a>
+          <p className="card-text">Precio: ${product.price}</p>
+          <div className={gridStyle["product-card-footer"]}>
+            <a
+              href="#"
+              className={gridStyle["product-btn"]}
+              onClick={() => onEdit(product)}
+            >
+              Editar
+            </a>
+            <a
+              href="#"
+              className={`${gridStyle["product-btn"]} ${gridStyle["product-btn-danger"]}`}
+              style={{ marginLeft: "10px" }}
+              onClick={() => onDelete()}
+            >
+              Eliminar
+            </a>
+          </div>
         </div>
       </div>
     </>

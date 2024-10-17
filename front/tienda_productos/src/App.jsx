@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Productos from "./components/Productos";
 import Perfil from "./components/Perfil";
+import styles from "./styles/App.module.css";
 
 function App() {
   const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
@@ -24,18 +25,36 @@ function App() {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsAuth(false);
+  };
+
   return (
     <>
       <Router>
         <div>
-          <nav>
+          <nav className={styles.menu}>
             {isAuth && (
-              <ul>
-                <li>
-                  <a href="/productos">Tienda</a>
+              <ul className={styles.menuList}>
+                <li className={styles.menuItem}>
+                  <a className={styles.menuLink} href="/productos">
+                    Tienda
+                  </a>
                 </li>
-                <li>
-                  <a href="/perfil">Perfil</a>
+                <li className={styles.menuItem}>
+                  <a className={styles.menuLink} href="/perfil">
+                    Perfil
+                  </a>
+                </li>
+                <li className={styles.menuItem}>
+                  <button
+                    className={styles.logoutButton}
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
                 </li>
               </ul>
             )}

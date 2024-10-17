@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import style from "../styles/Login.module.css";
 
 function Login({ setIsAuth }) {
   const [username, setUser] = useState("");
@@ -18,7 +19,7 @@ function Login({ setIsAuth }) {
 
   const envioDatos = (e) => {
     axios
-      .post("http://localhost:8084/auth/login", {
+      .post("http://localhost:8090/auth/login", {
         username,
         password,
       })
@@ -41,25 +42,40 @@ function Login({ setIsAuth }) {
 
   return (
     <>
-      <h1>Inicio de Sesion</h1>
-      <form action="" onSubmit={envioDatos}>
-        <label htmlFor="">Usuario: </label>
-        <input
-          type="text"
-          placeholder="Ingresa tu usuario"
-          value={username}
-          onChange={handleUser}
-        />
-        <label htmlFor="">Contraseña: </label>
-        <input
-          type="password"
-          placeholder="Ingresa tu contraseña"
-          value={password}
-          onChange={handlePassword}
-        />
-        <button type="submit">Iniciar Sesion</button>
-        <button onClick={() => navigate("/register")}>Registrarse</button>
-      </form>
+      <div className={style.container}>
+        <h1>Inicio de Sesion</h1>
+        <form action="" className={style.form} onSubmit={envioDatos}>
+          <label className={style.label} htmlFor="">
+            Usuario:{" "}
+          </label>
+          <input
+            className={style.input}
+            type="text"
+            placeholder="Ingresa tu usuario"
+            value={username}
+            onChange={handleUser}
+          />
+          <label className={style.label} htmlFor="">
+            Contraseña:{" "}
+          </label>
+          <input
+            className={style.input}
+            type="password"
+            placeholder="Ingresa tu contraseña"
+            value={password}
+            onChange={handlePassword}
+          />
+          <button className={style.button} type="submit">
+            Iniciar Sesion
+          </button>
+          <button
+            className={style.button}
+            onClick={() => navigate("/register")}
+          >
+            Registrarse
+          </button>
+        </form>
+      </div>
     </>
   );
 }

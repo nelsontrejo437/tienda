@@ -1,0 +1,38 @@
+.menu {
+  background-color: #007bff;
+  padding: 5px 10px;
+}
+
+.menuList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.menuItem {
+  margin: 0 10px;
+}
+
+.menuLink {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.menuLink:hover {
+  text-decoration: underline;
+}
+
+.logoutButton {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.logoutButton:hover {
+  text-decoration: underline;
+}
