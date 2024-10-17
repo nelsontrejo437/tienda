@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.tienda.tienda.productos.models.Productos;
 import com.tienda.tienda.productos.services.ProductosService;
@@ -39,27 +41,35 @@ public class ProductosController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Productos> saveProd(@RequestBody Productos prod){
+    @PostMapping("/upload")
+    public ResponseEntity<Productos> saveProd(@RequestParam("image") MultipartFile file, @RequestParam("name") String name, @RequestParam("price") Double price){
         try{
-            Productos savePr = service.createProducts(prod);
+            Productos savePr = service.createProductsWithImage(file, name, price);
             return ResponseEntity.ok(savePr);
         }
         catch(Exception ex){
             return ResponseEntity.status(500).body(null);
         }
+        
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Productos> updateProd(@RequestBody Productos prod, @PathVariable Long id){
+    public ResponseEntity<Productos> updateProd(@PathVariable Long id, @RequestParam(required = false) MultipartFile image, @RequestParam(required = false) String name, @RequestParam(required = false) Double price){
         try{
-            Productos updateProd = service.updateProducts(prod, id);
-            if(updateProd != null){
-                return ResponseEntity.ok(updateProd);
+            Productos prod = new Productos();
+            if(name != null){   
+                prod.setName(name);
             }
-            else {
-               return ResponseEntity.notFound().build();
+            if(price != null){
+                prod.setPrice(price);
             }
+            if(image != null){
+                prod = service.updateProducts(prod, id, image);
+            }
+            else{
+                prod = service.updateProducts(prod, id, null);
+            }
+            return ResponseEntity.ok(prod);
         }
         catch(Exception ex){
             return ResponseEntity.status(500).body(null);
