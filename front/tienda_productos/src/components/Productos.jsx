@@ -12,8 +12,8 @@ function Productos() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [newProduct, setNewProduct] = useState({
     name: "",
-    descripcion: "",
     price: 0,
+    image: null,
   });
   const [search, setSearch] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
@@ -74,6 +74,7 @@ function Productos() {
     setNewProduct({
       name: "",
       price: 0,
+      imageUrl: null,
     });
   };
 
@@ -106,11 +107,21 @@ function Productos() {
 
   const handleAddProduct = async () => {
     try {
+      const formData = new FormData();
+      formData.append("name", newProduct.name);
+      formData.append("price", newProduct.price);
+      formData.append("image", newProduct.image);
+
+      if (newProduct.image) {
+        formData.append("image", newProduct.image);
+      }
+
       const response = await axios.post(
-        "http://localhost:8090/productos",
-        newProduct,
+        "http://localhost:8090/productos/upload",
+        formData,
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
@@ -195,6 +206,18 @@ function Productos() {
               }
             />
           </div>
+          <div className="mb-3">
+            <label htmlFor=""> Imagen: </label>
+            <input
+              type="file"
+              className="form-control"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                setNewProduct({ ...newProduct, image: file });
+              }}
+            />
+          </div>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <button onClick={closeAddModal} className="btn btn-secondary">
               Cancelar
@@ -249,6 +272,15 @@ function ProductsCard({ product, onEdit, onDelete }) {
       <div className={gridStyle["product-card"]}>
         <h5 className={gridStyle["product-card-header"]}>{product.name}</h5>
         <div className={gridStyle["product-card-body"]}>
+          {product.imageUrl && (
+            <div className={gridStyle["product-image"]}>
+              <img
+                src={`http://localhost:8090/${product.imageUrl}`}
+                alt={product.name}
+                className={gridStyle["product-image"]}
+              />
+            </div>
+          )}
           <h5 className="card-title">{product.descripcion}</h5>
           <p className="card-text">Precio: ${product.price}</p>
           <div className={gridStyle["product-card-footer"]}>

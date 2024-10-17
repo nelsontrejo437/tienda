@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/register/**", "/auth/login/**").permitAll()
                         .requestMatchers("/productos/**").authenticated()
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/perfil/**").authenticated()
                         .anyRequest().authenticated())
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
