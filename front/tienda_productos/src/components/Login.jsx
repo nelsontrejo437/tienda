@@ -18,6 +18,13 @@ function Login({ setIsAuth }) {
   };
 
   const envioDatos = (e) => {
+    e.preventDefault();
+
+    if (!username || !password) {
+      alert("Por favor, completa todos los campos");
+      return;
+    }
+
     axios
       .post("http://localhost:8090/auth/login", {
         username,
@@ -31,11 +38,13 @@ function Login({ setIsAuth }) {
         navigate("/productos");
       })
       .catch((error) => {
-        console.error(error.response ? error.response.data : error.message);
-        alert("Error al enviar datos al servidor");
+        if (error.reponse && error.reponse.status === 401) {
+          alert("Credenciales incorrectas");
+        } else {
+          alert("Error al enviar datos al servidor");
+        }
       });
 
-    e.preventDefault();
     setUser("");
     setPassword("");
   };

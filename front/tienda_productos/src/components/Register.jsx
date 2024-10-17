@@ -22,6 +22,11 @@ function Register() {
   const envioDatos = (e) => {
     e.preventDefault();
 
+    if (!username || !password || !nombre) {
+      alert("Por favor, completa todos los campos");
+      return;
+    }
+
     axios
       .post("http://localhost:8090/auth/register", {
         name: nombre,
