@@ -85,11 +85,20 @@ function Productos() {
 
   const handleUpdate = async () => {
     try {
+      const formData = new FormData();
+      formData.append("name", productEdit.name);
+      formData.append("price", productEdit.price);
+
+      if (productEdit.image) {
+        formData.append("image", productEdit.image);
+      }
+
       const response = await axios.put(
         `http://localhost:8090/productos/${productEdit.id}`,
-        productEdit,
+        formData,
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
@@ -250,6 +259,18 @@ function Productos() {
               onChange={(e) =>
                 setProductEdit({ ...productEdit, price: e.target.value })
               }
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="">Imagen:</label>
+            <input
+              type="file"
+              className="form-control"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                setProductEdit({ ...productEdit, image: file });
+              }}
             />
           </div>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
