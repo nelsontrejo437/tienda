@@ -38,8 +38,11 @@ function Register() {
         navigate("/");
       })
       .catch((error) => {
-        console.error(error.message);
-        alert("Error al registrar el usuario");
+        if (error.response && error.response.status === 409) {
+          alert("El usuario ya existe");
+        } else {
+          alert("Error al enviar datos al servidor");
+        }
       });
   };
 

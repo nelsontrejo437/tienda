@@ -35,7 +35,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Usuarios> usersCreate(@RequestBody Usuarios users){
+    public ResponseEntity<?> usersCreate(@RequestBody Usuarios users){
+        Optional<Usuarios> existeUser = service.findByUsername(users.getUsername());
+        if(existeUser.isPresent()){
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "usuario ya existente");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        }
+        
         users.setPassword(encoder.encode(users.getPassword()));
         Usuarios user = service.createUsers(users);
         return ResponseEntity.ok(user);
